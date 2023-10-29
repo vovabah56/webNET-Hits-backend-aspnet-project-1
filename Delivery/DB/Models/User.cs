@@ -29,5 +29,4 @@ public class User
     [Required]
     [MinLength(6)]
     public string Password { get; set; }
-    
 }
