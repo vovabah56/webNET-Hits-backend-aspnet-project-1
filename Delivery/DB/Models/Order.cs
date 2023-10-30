@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Delivery.Data.Models;
 
-namespace Delivery.Data.Models;
+namespace Delivery.DB.Models;
 
 public class Order
 {

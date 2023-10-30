@@ -1,5 +1,6 @@
 ﻿
 using Delivery.Data.Models;
+using Delivery.DB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -17,6 +18,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Cart> Carts { get; set; }
     
     public DbSet<Order> Orders { get; set; }
+    
+    public DbSet<Token> Tokens { get; set; }
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
 
