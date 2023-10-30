@@ -26,7 +26,46 @@ public class UsersService : IUserService
         _mapper = mapper;
     }
 
-    
+
+    public async Task<TokenResponse> RegisterUser(UserRegisterDto userRegisterDto)
+    {
+        userRegisterDto.Email = NormalizeAttribute(userRegisterDto.Email);
+
+        await UniqueCheck(userRegisterDto);
+
+        byte[] salt;
+        RandomNumberGenerator.Create().GetBytes(salt = new byte[16]);
+        var pbkdf2 = new Rfc2898DeriveBytes(userRegisterDto.Password, salt, 100000);
+        var hash = pbkdf2.GetBytes(20);
+        var hashBytes = new byte[36];
+        Array.Copy(salt, 0, hashBytes, 0, 16);
+        Array.Copy(hash, 0, hashBytes, 16, 20);
+        var savedPasswordHash = Convert.ToBase64String(hashBytes);
+
+        CheckGender(userRegisterDto.Gender);
+        CheckBirthDate(userRegisterDto.BirthDate);
+
+        await _context.Users.AddAsync(new User
+        {
+            Id = Guid.NewGuid(),
+            FullName = userRegisterDto.FullName,
+            BirthDate = userRegisterDto.BirthDate,
+            Address = userRegisterDto.Address,
+            Email = userRegisterDto.Email,
+            Gender = userRegisterDto.Gender,
+            Password = savedPasswordHash,
+            PhoneNumber = userRegisterDto.PhoneNumber,
+        });
+        await _context.SaveChangesAsync();
+
+        var credentials = new LoginDto
+        {
+            Email = userRegisterDto.Email,
+            Password = userRegisterDto.Password
+        };
+
+        return await LoginUser(credentials);
+    }
 
     public async Task<TokenResponse> LoginUser(LoginDto credentials)
     {

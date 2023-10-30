@@ -18,7 +18,13 @@ public class UsersController : ControllerBase
         _usersService = usersService;
     }
 
-    
+    [HttpPost]
+    [Route("register")]
+    [SwaggerOperation(Summary = "Register new user")]
+    public async Task<TokenResponse> RegisterUser([FromBody] UserRegisterDto userRegisterDto)
+    {
+        return await _usersService.RegisterUser(userRegisterDto);
+    }
 
     [HttpPost]
     [Route("login")]
