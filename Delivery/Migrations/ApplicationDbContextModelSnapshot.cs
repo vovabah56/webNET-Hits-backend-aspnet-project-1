@@ -186,6 +186,199 @@ namespace Delivery.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Delivery.Data.Models.as_addr_obj", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("ChangeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("IsActive")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IsActual")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("NextId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ObjectGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("ObjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("OperTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("PrevId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TypeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AsAddrObjs");
+                });
+
+            modelBuilder.Entity("Delivery.Data.Models.as_adm_hierarchy", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AreaCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("ChangeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CityCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("IsActive")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("NextId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ObjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ParentObjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PlaceCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PlanCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("PrevId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RegionCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("StreetCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AsAdmHierarchies");
+                });
+
+            modelBuilder.Entity("Delivery.Data.Models.as_houses", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AddNum1")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddNum2")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("AddType1")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("AddType2")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("ChangeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("HouseType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IsActive")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IsActual")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("NextId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ObjectGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("ObjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("OperTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("PrevId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AsHouses");
+                });
+
             modelBuilder.Entity("Delivery.Data.Models.Cart", b =>
                 {
                     b.HasOne("Delivery.Data.Models.Order", null)

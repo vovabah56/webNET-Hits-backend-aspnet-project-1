@@ -19,7 +19,12 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<Order> Orders { get; set; }
     
-    public DbSet<Token> Tokens { get; set; }
+    
+    public DbSet<as_addr_obj> AsAddrObjs { get; set; }
+    
+    public DbSet<as_adm_hierarchy> AsAdmHierarchies { get; set; }
+    
+    public DbSet<as_houses> AsHouses { get; set; }
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
 
