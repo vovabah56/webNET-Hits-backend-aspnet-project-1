@@ -1,7 +1,6 @@
 ﻿
 using Delivery.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Delivery.DB;
 
@@ -17,6 +16,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<Cart> Carts { get; set; }
     
     public DbSet<Order> Orders { get; set; }
+    
+    
+    public DbSet<as_addr_obj> AsAddrObjs { get; set; }
+    
+    public DbSet<as_adm_hierarchy> AsAdmHierarchies { get; set; }
+    
+    public DbSet<as_houses> AsHouses { get; set; }
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
 
