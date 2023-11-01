@@ -22,6 +22,50 @@ namespace Delivery.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Delivery.DB.Models.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DeliveryTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("OrderTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Delivery.DB.Models.Token", b =>
+                {
+                    b.Property<string>("InvalidToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("InvalidToken");
+
+                    b.ToTable("Tokens");
+                });
+
             modelBuilder.Entity("Delivery.Data.Models.Cart", b =>
                 {
                     b.Property<Guid>("Id")
@@ -83,37 +127,6 @@ namespace Delivery.Migrations
                     b.ToTable("Dishes");
                 });
 
-            modelBuilder.Entity("Delivery.Data.Models.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DeliveryTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("OrderTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Orders");
-                });
-
             modelBuilder.Entity("Delivery.Data.Models.Rating", b =>
                 {
                     b.Property<Guid>("Id")
@@ -135,19 +148,6 @@ namespace Delivery.Migrations
                         .IsUnique();
 
                     b.ToTable("Ratings");
-                });
-
-            modelBuilder.Entity("Delivery.Data.Models.Token", b =>
-                {
-                    b.Property<string>("InvalidToken")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("ExpiredDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("InvalidToken");
-
-                    b.ToTable("Token");
                 });
 
             modelBuilder.Entity("Delivery.Data.Models.User", b =>
@@ -381,12 +381,12 @@ namespace Delivery.Migrations
 
             modelBuilder.Entity("Delivery.Data.Models.Cart", b =>
                 {
-                    b.HasOne("Delivery.Data.Models.Order", null)
+                    b.HasOne("Delivery.DB.Models.Order", null)
                         .WithMany("Carts")
                         .HasForeignKey("OrderId");
                 });
 
-            modelBuilder.Entity("Delivery.Data.Models.Order", b =>
+            modelBuilder.Entity("Delivery.DB.Models.Order", b =>
                 {
                     b.Navigation("Carts");
                 });

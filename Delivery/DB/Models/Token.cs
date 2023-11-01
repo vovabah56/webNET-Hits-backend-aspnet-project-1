@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Delivery.Data.Models;
+namespace Delivery.DB.Models;
 
 public class Token
 {
@@ -8,5 +8,4 @@ public class Token
     public string InvalidToken { get; set; }
     [Required]
     public DateTime ExpiredDate { get; set; }
-    
 }

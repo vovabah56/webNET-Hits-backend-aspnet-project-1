@@ -6,6 +6,7 @@ using Delivery.Configurations;
 using Delivery.Data.Models;
 using Delivery.DB;
 using Delivery.DB.Enums;
+using Delivery.DB.Models;
 using Delivery.DTO;
 
 
@@ -13,14 +14,14 @@ using Delivery.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DeliveryBackend.Services;
+namespace Delivery.Services;
 
-public class UsersService : IUserService
+public class UserService : IUserService
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public UsersService(ApplicationDbContext context, IMapper mapper)
+    public UserService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -66,7 +67,10 @@ public class UsersService : IUserService
 
         return await LoginUser(credentials);
     }
-
+    
+    
+    
+    
     public async Task<TokenResponse> LoginUser(LoginDto credentials)
     {
         credentials.Email = NormalizeAttribute(credentials.Email);
@@ -90,31 +94,11 @@ public class UsersService : IUserService
         {
             Token = encodeJwt
         };
-
+        
         return result;
     }
 
-    public async Task Logout(string token)
-    {
-        var alreadyExistsToken = await _context.Tokens.FirstOrDefaultAsync(x => x.InvalidToken == token);
-
-        if (alreadyExistsToken == null)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var expiredDate = handler.ReadJwtToken(token).ValidTo;
-            _context.Tokens.Add(new Token { InvalidToken = token, ExpiredDate = expiredDate });
-            await _context.SaveChangesAsync();
-        }
-        else
-        {
-            var ex = new Exception();
-            ex.Data.Add(StatusCodes.Status401Unauthorized.ToString(),
-                "Token is already invalid"
-            );
-            throw ex;
-        }
-    }
-
+    
     
 
     
@@ -193,7 +177,8 @@ public class UsersService : IUserService
             throw ex;
         }
     }
-
+    
+    
     private static void CheckGender(string gender)
     {
         if (gender == Gender.Male.ToString() || gender == Gender.Female.ToString()) return;

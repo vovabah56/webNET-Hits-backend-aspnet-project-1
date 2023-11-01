@@ -19,12 +19,13 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<Order> Orders { get; set; }
     
-    
     public DbSet<as_addr_obj> AsAddrObjs { get; set; }
     
     public DbSet<as_adm_hierarchy> AsAdmHierarchies { get; set; }
     
     public DbSet<as_houses> AsHouses { get; set; }
+    
+    public DbSet<Token> Tokens { get; set; }
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
 
@@ -51,9 +52,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Cart>()
             .Property(x=>x.OrderId)
             .IsRequired(false);
-
-        modelBuilder.Entity<Token>().HasKey(x => x.InvalidToken);
         
+        modelBuilder.Entity<Token>().HasKey(x => x.InvalidToken);
         base.OnModelCreating(modelBuilder);
     }
 }
