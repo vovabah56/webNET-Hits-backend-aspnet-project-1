@@ -122,6 +122,9 @@ namespace Delivery.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
+                    b.Property<double?>("Rating")
+                        .HasColumnType("double precision");
+
                     b.HasKey("Id");
 
                     b.ToTable("Dishes");
@@ -381,14 +384,36 @@ namespace Delivery.Migrations
 
             modelBuilder.Entity("Delivery.Data.Models.Cart", b =>
                 {
+                    b.HasOne("Delivery.Data.Models.Dish", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Delivery.DB.Models.Order", null)
                         .WithMany("Carts")
                         .HasForeignKey("OrderId");
                 });
 
+            modelBuilder.Entity("Delivery.Data.Models.Rating", b =>
+                {
+                    b.HasOne("Delivery.Data.Models.Dish", null)
+                        .WithMany("Ratings")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Delivery.DB.Models.Order", b =>
                 {
                     b.Navigation("Carts");
+                });
+
+            modelBuilder.Entity("Delivery.Data.Models.Dish", b =>
+                {
+                    b.Navigation("Carts");
+
+                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }

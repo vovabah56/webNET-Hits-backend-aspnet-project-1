@@ -26,8 +26,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<as_houses> AsHouses { get; set; }
     
     public DbSet<Token> Tokens { get; set; }
-    
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+        Database.EnsureCreated();
+    }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
