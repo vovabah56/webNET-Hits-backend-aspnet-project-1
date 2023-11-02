@@ -9,13 +9,14 @@ public class DishDto
     [Required]
     [MinLength(1)]
     public string Name { get; set; }
+    [Required] 
+    public double Price { get; set; }
     public string? Description { get; set; }
     [Required]
-    public double Price { get; set; }
-    public string? Image { get; set; }
-    [Required]
-    public bool Vegetarian { get; set; }
-    public double? Rating { get; set; }
-    [Required]
+    public bool IsVegetarian { get; set; }
+    [Required] 
     public string Category { get; set; }
+    public string? Photo { get; set; }
+    
+    public double? Rating { get; set; }
 }

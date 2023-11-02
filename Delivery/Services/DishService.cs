@@ -3,7 +3,6 @@ using Delivery.Data.Models;
 using Delivery.DB;
 using Delivery.DTO;
 using Delivery.Services.Interfaces;
-using DeliveryBackend.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Delivery.Services;
@@ -20,7 +19,23 @@ public class DishService : IDishService
         _mapper = mapper;
     }
 
-    
+
+    public async Task<DishDto> GetDish(Guid id)
+    {
+        var dish = await _context.Dishes
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (dish != null)
+        {
+            
+            return _mapper.Map<DishDto>(dish);
+        }
+
+        var ex = new Exception();
+        ex.Data.Add(StatusCodes.Status404NotFound.ToString(), "Dish not found.");
+        throw ex;
+    }
 
     public async Task AddDish(DishDto dishDtos)
     {
@@ -29,9 +44,9 @@ public class DishService : IDishService
             Id = Guid.NewGuid(),
             Category = dishDtos.Category,
             Description = dishDtos.Description,
-            IsVegetarian = dishDtos.Vegetarian,
+            IsVegetarian = dishDtos.IsVegetarian,
             Name = dishDtos.Name,
-            Photo = dishDtos.Image,
+            Photo = dishDtos.Photo,
             Price = dishDtos.Price
         });
         await _context.SaveChangesAsync();

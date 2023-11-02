@@ -9,18 +9,27 @@ namespace Delivery.Controllers;
 [Route("api/dish")]
 public class DishController : ControllerBase
 {
-    public IDishService _DishService { get; set; }
+    public IDishService _dishService { get; set; }
 
 
     public DishController(IDishService dishService)
     {
-        _DishService = dishService;
+        _dishService = dishService;
     }
 
+
+    [HttpGet]
+    [Route("{id}")]
+    public async Task<DishDto> GetDish(Guid id)
+    {
+        return await _dishService.GetDish(id);
+    }
+    
+    
     [HttpPost]
     public async Task AddDish([FromBody] DishDto dishDtos)
     {
-        await _DishService.AddDish(dishDtos);
+        await _dishService.AddDish(dishDtos);
     }
     
     
