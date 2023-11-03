@@ -203,18 +203,16 @@ namespace Delivery.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("IsActive")
+                    b.Property<int?>("IsActive")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IsActual")
+                    b.Property<int?>("IsActual")
                         .HasColumnType("integer");
 
                     b.Property<string>("Level")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("NextId")
@@ -223,7 +221,7 @@ namespace Delivery.Migrations
                     b.Property<Guid>("ObjectGuid")
                         .HasColumnType("uuid");
 
-                    b.Property<long>("ObjectId")
+                    b.Property<long?>("ObjectId")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("OperTypeId")
@@ -236,7 +234,6 @@ namespace Delivery.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("TypeName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -256,20 +253,18 @@ namespace Delivery.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AreaCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("ChangeId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("CityCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("IsActive")
+                    b.Property<int?>("IsActive")
                         .HasColumnType("integer");
 
                     b.Property<long?>("NextId")
@@ -282,29 +277,24 @@ namespace Delivery.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Path")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PlaceCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PlanCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("PrevId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("RegionCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("StreetCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -324,11 +314,9 @@ namespace Delivery.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AddNum1")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("AddNum2")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("AddType1")
@@ -344,16 +332,15 @@ namespace Delivery.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("HouseNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("HouseType")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IsActive")
+                    b.Property<int?>("IsActive")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IsActual")
+                    b.Property<int?>("IsActual")
                         .HasColumnType("integer");
 
                     b.Property<long?>("NextId")
@@ -362,7 +349,7 @@ namespace Delivery.Migrations
                     b.Property<Guid>("ObjectGuid")
                         .HasColumnType("uuid");
 
-                    b.Property<long>("ObjectId")
+                    b.Property<long?>("ObjectId")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("OperTypeId")

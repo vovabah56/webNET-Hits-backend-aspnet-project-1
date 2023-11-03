@@ -11,5 +11,6 @@ public class MappingProfile : Profile
     {
         CreateMap<UserRegisterDto, User>();
         CreateMap<User, UserDto>();
+        CreateMap<as_addr_obj, AddressDto>();
     }
 }
