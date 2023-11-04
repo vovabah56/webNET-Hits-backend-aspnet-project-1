@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Delivery.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231031164645_fix")]
-    partial class fix
+    [Migration("20231103125425_fixAddressModel")]
+    partial class fixAddressModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,19 @@ namespace Delivery.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Delivery.DB.Models.Token", b =>
+                {
+                    b.Property<string>("InvalidToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("InvalidToken");
+
+                    b.ToTable("Tokens");
                 });
 
             modelBuilder.Entity("Delivery.Data.Models.Cart", b =>
@@ -110,6 +123,9 @@ namespace Delivery.Migrations
                         .HasColumnType("text");
 
                     b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("Rating")
                         .HasColumnType("double precision");
 
                     b.HasKey("Id");
@@ -190,18 +206,16 @@ namespace Delivery.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("IsActive")
+                    b.Property<int?>("IsActive")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IsActual")
+                    b.Property<int?>("IsActual")
                         .HasColumnType("integer");
 
                     b.Property<string>("Level")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("NextId")
@@ -210,7 +224,7 @@ namespace Delivery.Migrations
                     b.Property<Guid>("ObjectGuid")
                         .HasColumnType("uuid");
 
-                    b.Property<long>("ObjectId")
+                    b.Property<long?>("ObjectId")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("OperTypeId")
@@ -223,7 +237,6 @@ namespace Delivery.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("TypeName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -243,20 +256,18 @@ namespace Delivery.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AreaCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("ChangeId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("CityCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("IsActive")
+                    b.Property<int?>("IsActive")
                         .HasColumnType("integer");
 
                     b.Property<long?>("NextId")
@@ -269,29 +280,24 @@ namespace Delivery.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Path")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PlaceCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PlanCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("PrevId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("RegionCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("StreetCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -301,20 +307,7 @@ namespace Delivery.Migrations
 
                     b.ToTable("AsAdmHierarchies");
                 });
-            
-            modelBuilder.Entity("DeliveryBackend.Data.Models.Entities.Token", b =>
-            {
-                b.Property<string>("InvalidToken")
-                    .HasColumnType("text");
 
-                b.Property<DateTime>("ExpiredDate")
-                    .HasColumnType("timestamp with time zone");
-
-                b.HasKey("InvalidToken");
-
-                b.ToTable("Tokens");
-            });
-            
             modelBuilder.Entity("Delivery.Data.Models.as_houses", b =>
                 {
                     b.Property<long>("Id")
@@ -324,11 +317,9 @@ namespace Delivery.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AddNum1")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("AddNum2")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("AddType1")
@@ -344,16 +335,15 @@ namespace Delivery.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("HouseNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("HouseType")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IsActive")
+                    b.Property<int?>("IsActive")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IsActual")
+                    b.Property<int?>("IsActual")
                         .HasColumnType("integer");
 
                     b.Property<long?>("NextId")
@@ -362,7 +352,7 @@ namespace Delivery.Migrations
                     b.Property<Guid>("ObjectGuid")
                         .HasColumnType("uuid");
 
-                    b.Property<long>("ObjectId")
+                    b.Property<long?>("ObjectId")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("OperTypeId")
@@ -384,14 +374,36 @@ namespace Delivery.Migrations
 
             modelBuilder.Entity("Delivery.Data.Models.Cart", b =>
                 {
+                    b.HasOne("Delivery.Data.Models.Dish", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Delivery.DB.Models.Order", null)
                         .WithMany("Carts")
                         .HasForeignKey("OrderId");
                 });
 
+            modelBuilder.Entity("Delivery.Data.Models.Rating", b =>
+                {
+                    b.HasOne("Delivery.Data.Models.Dish", null)
+                        .WithMany("Ratings")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Delivery.DB.Models.Order", b =>
                 {
                     b.Navigation("Carts");
+                });
+
+            modelBuilder.Entity("Delivery.Data.Models.Dish", b =>
+                {
+                    b.Navigation("Carts");
+
+                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }
