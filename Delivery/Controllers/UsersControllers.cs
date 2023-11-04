@@ -33,7 +33,19 @@ public class UsersController : ControllerBase
         return await _usersService.LoginUser(credentials);
     }
 
-    
+
+    [HttpPost]
+    [Route("logout")]
+    public async Task Logout()
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
+        if (token == null)
+        {
+            throw new Exception("Token not found");
+        }
+
+        await _usersService.LogoutUser(token);
+    }
     
    
     

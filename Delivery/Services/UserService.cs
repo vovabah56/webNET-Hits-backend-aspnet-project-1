@@ -28,6 +28,27 @@ public class UserService : IUserService
     }
 
 
+    public async Task LogoutUser(string token)
+    {
+        var alreadyExistsToken = await _context.Tokens.FirstOrDefaultAsync(x => x.InvalidToken == token);
+
+        if (alreadyExistsToken == null)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var expiredDate = handler.ReadJwtToken(token).ValidTo;
+            _context.Tokens.Add(new Token { InvalidToken = token, ExpiredDate = expiredDate });
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status401Unauthorized.ToString(),
+                "Token is already invalid"
+            );
+            throw ex;
+        }
+    }
+
     public async Task<TokenResponse> RegisterUser(UserRegisterDto userRegisterDto)
     {
         userRegisterDto.Email = NormalizeAttribute(userRegisterDto.Email);
