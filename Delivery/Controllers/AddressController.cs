@@ -19,8 +19,8 @@ public class AddressController: ControllerBase
 
     [HttpGet]
     [Route("chain")]
-    public Task<List<AddressDto>> GetParents(Guid guid)
+    public async Task<List<AddressDto>> GetParents(Guid guid)
     {
-        return _addressService.GetParents(guid);
+        return  await _addressService.GetParents(guid);
     }
 }
