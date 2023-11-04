@@ -1,4 +1,5 @@
-﻿using Delivery.DTO;
+﻿using Delivery.DB.Models;
+using Delivery.DTO;
 using Delivery.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -46,7 +47,15 @@ public class UsersController : ControllerBase
 
         await _usersService.LogoutUser(token);
     }
+
+    [HttpPut]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    [Route("profile")]
+    public async Task EditProfile([FromBody] UserEditDto userEditDto)
+    {
+        await _usersService.EditUserProfile(Guid.Parse(User.Identity.Name), userEditDto);
+    }
     
-   
     
 }

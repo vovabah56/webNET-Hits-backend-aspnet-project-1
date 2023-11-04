@@ -49,6 +49,33 @@ public class UserService : IUserService
         }
     }
 
+    public async Task EditUserProfile(Guid guid, UserEditDto userEditDto)
+    {
+        var userEntity = await _context
+            .Users
+            .FirstOrDefaultAsync(x => x.Id == guid);
+
+        if (userEntity == null)
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status401Unauthorized.ToString(),
+                "User not exists"
+            );
+            throw ex;
+        }
+
+        CheckGender(userEditDto.Gender);
+        CheckBirthDate(userEditDto.BirthDate);
+
+        userEntity.FullName = userEditDto.FullName;
+        userEntity.BirthDate = userEditDto.BirthDate;
+        userEntity.Address = userEditDto.Address;
+        userEntity.Gender = userEditDto.Gender;
+        userEntity.PhoneNumber = userEditDto.PhoneNumber;
+
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<TokenResponse> RegisterUser(UserRegisterDto userRegisterDto)
     {
         userRegisterDto.Email = NormalizeAttribute(userRegisterDto.Email);
