@@ -9,5 +9,8 @@ public interface IUserService
     Task EditUserProfile(Guid guid, UserEditDto userEditDto);
     Task<TokenResponse> RegisterUser(UserRegisterDto userRegisterDto);
     Task<TokenResponse> LoginUser(LoginDto credentials);
-    
+
+    Task<UserDto> GetUserProfile(Guid guid);
+
+
 }
