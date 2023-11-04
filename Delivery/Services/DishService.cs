@@ -3,6 +3,7 @@ using Delivery.Data.Models;
 using Delivery.DB;
 using Delivery.DTO;
 using Delivery.Services.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Delivery.Services;
@@ -12,6 +13,8 @@ public class DishService : IDishService
     
     private ApplicationDbContext _context { get; set; }
     private IMapper _mapper { get; set; }
+    
+    
 
     public DishService(ApplicationDbContext context, IMapper mapper)
     {
@@ -19,23 +22,22 @@ public class DishService : IDishService
         _mapper = mapper;
     }
 
-
     public async Task<DishDto> GetDish(Guid id)
-    {
-        var dish = await _context.Dishes
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-
-        if (dish != null)
         {
-            
-            return _mapper.Map<DishDto>(dish);
+            var dish = await _context.Dishes
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+    
+            if (dish != null)
+            {
+                
+                return _mapper.Map<DishDto>(dish);
+            }
+    
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status404NotFound.ToString(), "Dish not found.");
+            throw ex;
         }
-
-        var ex = new Exception();
-        ex.Data.Add(StatusCodes.Status404NotFound.ToString(), "Dish not found.");
-        throw ex;
-    }
 
     public async Task AddDish(DishDto dishDtos)
     {
