@@ -119,10 +119,22 @@ public class UserService : IUserService
         return result;
     }
 
-    
-    
+    public async Task<UserDto> GetUserProfile(Guid guid)
+    {
+        var userEntity = await _context
+            .Users
+            .FirstOrDefaultAsync(x => x.Id == guid);
 
-    
+        if (userEntity != null)
+            return _mapper.Map<UserDto>(userEntity);
+
+        var ex = new Exception();
+        ex.Data.Add(StatusCodes.Status401Unauthorized.ToString(),
+            "User not exists"
+        );
+        throw ex;
+    }
+
 
     private async Task<ClaimsIdentity> GetIdentity(string email, string password)
     {
