@@ -24,12 +24,17 @@ public class DishController : ControllerBase
     {
         return await _dishService.GetDish(id);
     }
-    
+
+    [HttpGet]
+    public async Task<DishMenuDto> GetMenu([FromQuery] MenuQuery menuQuery)
+    {
+        return await _dishService.GetMenu(menuQuery);
+    }
     
     [HttpPost]
-    public async Task AddDish([FromBody] DishDto dishDtos)
+    public async Task AddDishs([FromBody] List<DishDto> dishDtos)
     {
-        await _dishService.AddDish(dishDtos);
+        await _dishService.AddDishs(dishDtos);
     }
     
     

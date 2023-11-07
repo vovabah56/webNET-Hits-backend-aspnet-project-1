@@ -1,4 +1,5 @@
-﻿using Delivery.Services.Interfaces;
+﻿using Delivery.DTO;
+using Delivery.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,21 @@ public class BasketController: ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [Authorize(Policy = "ValidateToken")]
     [Route("dish/{dishId}")]
     public async Task AddDishToCart(Guid dishId)
     {
         await _basketService.AddDishToCart(Guid.Parse(User.Identity.Name), dishId);
     }
-    
+
+
+    [HttpGet]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    public Task<List<BasketDto>> GetBasketUser()
+    {
+        return _basketService.GetBasketUser(Guid.Parse(User.Identity.Name));
+    }
     
 }

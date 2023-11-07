@@ -1,6 +1,9 @@
-﻿namespace Delivery.Services.Interfaces;
+﻿using Delivery.DTO;
+
+namespace Delivery.Services.Interfaces;
 
 public interface IBasketService
 {
     Task AddDishToCart(Guid userId, Guid dishId);
+    Task<List<BasketDto>> GetBasketUser(Guid userOd);
 }

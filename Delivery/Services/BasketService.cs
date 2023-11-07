@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Delivery.Data.Models;
 using Delivery.DB;
+using Delivery.DTO;
 using Delivery.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,6 +52,26 @@ public class BasketService: IBasketService
             await _context.SaveChangesAsync();
         }
         
+    }
 
+    public async Task<List<BasketDto>> GetBasketUser(Guid userId)
+    {
+        var dishList = await _context.Carts.Where(x => x.UserId == userId && x.OrderId == null).Join(
+                _context.Dishes,
+                c => c.DishId,
+                d => d.Id,
+                (c, d) => new BasketDto
+                {
+                    Id = c.Id,
+                    Name = d.Name,
+                    Price = d.Price,
+                    TotalPrice = d.Price * c.Count,
+                    Count = c.Count,
+                    Photo = d.Photo
+                }
+            )
+            .ToListAsync();
+
+        return dishList;
     }
 }
