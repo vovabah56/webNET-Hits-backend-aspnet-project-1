@@ -1,5 +1,6 @@
 ﻿using Delivery.DTO;
 using Delivery.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.Controllers;
@@ -30,6 +31,16 @@ public class DishController : ControllerBase
     {
         return await _dishService.GetMenu(menuQuery);
     }
+    
+    [HttpPost]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    [Route("{id}/rating")]
+    public async Task SetDishRating(Guid id, [FromQuery] int rating)
+    {
+        await _dishService.SetRating(id,  Guid.Parse(User.Identity.Name), rating);
+    }
+    
     
     [HttpPost]
     public async Task AddDishs([FromBody] List<DishDto> dishDtos)

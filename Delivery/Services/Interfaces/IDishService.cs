@@ -9,5 +9,7 @@ public interface IDishService
 
     Task<DishMenuDto> GetMenu(MenuQuery menuQuery);
 
+    Task SetRating(Guid dishId, Guid userId, int value);
+
 
 }

@@ -79,6 +79,50 @@ public class DishService : IDishService
         throw ex;
     }
 
+    public async Task SetRating(Guid dishId, Guid userId, int value)
+    {
+        CheckCorrectRating(value);
+        await CheckDishInDb(dishId);
+        if (!await IsDishOrdered(dishId, userId))
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status400BadRequest.ToString(),
+                "User can't set rating on dish that wasn't ordered"
+            );
+            throw ex;
+        }
+
+        if (await CheckRating(dishId, userId))
+        {
+            _context.Ratings.Add(new Rating
+            {
+                Id = Guid.NewGuid(),
+                DishId = dishId,
+                UserId = userId,
+                Value = value
+            });
+
+            await _context.SaveChangesAsync();
+
+            var dishEntity = await _context.Dishes.FirstOrDefaultAsync(x => x.Id == dishId);
+            var dishRatingList = await _context.Ratings.Where(x => x.DishId == dishId).ToListAsync();
+            var sum = dishRatingList.Sum(r => r.Value);
+            dishEntity!.Rating = (double)sum / dishRatingList.Count;
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    private void CheckCorrectRating(int value)
+    {
+        if (value is >= 0 and <= 10) return;
+        var e = new Exception();
+        e.Data.Add(StatusCodes.Status400BadRequest.ToString(),
+            "Bad Request, Rating range is 0-10"
+        );
+        throw e;    }
+
+
     public async Task<bool> CheckRating(Guid dishId, Guid userId)
     {
         await CheckDishInDb(dishId);
