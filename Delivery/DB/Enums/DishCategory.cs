@@ -1,4 +1,7 @@
-﻿namespace Delivery.DB.Enums;
+﻿using System.Text.Json.Serialization;
+
+namespace Delivery.DB.Enums;
+
 
 public enum DishCategory
 {

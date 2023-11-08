@@ -2,6 +2,7 @@
 
 namespace Delivery.DB.Enums;
 
+
 public enum GarAddressLevel
 {
     Region,

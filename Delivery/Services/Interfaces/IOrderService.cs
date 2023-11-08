@@ -1,6 +1,8 @@
-﻿namespace Delivery.Services.Interfaces;
+﻿using Delivery.DTO;
 
-public class IOrderService
+namespace Delivery.Services.Interfaces;
+
+public interface IOrderService
 {
-
+    public Task CreateOrder(Guid userId, CreateOrderDto orderCreateDto);
 }

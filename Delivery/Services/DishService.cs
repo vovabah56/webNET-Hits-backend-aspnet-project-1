@@ -160,17 +160,17 @@ public class DishService : IDishService
     private static IEnumerable<Dish> SortMenu(MenuQuery dishListQuery, IEnumerable<Dish> dishList)
     {
         var orderBy = dishListQuery.Sorting;
-        if (orderBy == DishSorting.NameAsc.ToString())
+        if (orderBy == DishSorting.NameAsc)
             return dishList.OrderBy(s => s.Name).ToList();
-        if (orderBy == DishSorting.NameDesc.ToString())
+        if (orderBy == DishSorting.NameDesc)
             return dishList.OrderByDescending(s => s.Name).ToList();
-        if (orderBy == DishSorting.PriceAsc.ToString())
+        if (orderBy == DishSorting.PriceAsc)
             return dishList.OrderBy(s => s.Price).ToList();
-        if (orderBy == DishSorting.PriceDesc.ToString())
+        if (orderBy == DishSorting.PriceDesc)
             return dishList.OrderByDescending(s => s.Price).ToList();
-        if (orderBy == DishSorting.RatingAsc.ToString())
+        if (orderBy == DishSorting.RatingAsc)
             return dishList.OrderBy(s => s.Rating).ToList();
-        return orderBy == DishSorting.RatingDesc.ToString()
+        return orderBy == DishSorting.RatingDesc
             ? dishList.OrderByDescending(s => s.Rating).ToList()
             : dishList.OrderBy(s => s.Name).ToList();
     }

@@ -2,7 +2,7 @@
 
 public class GarAddressLevelList
 {
-    public List<KeyValuePair<string, string>> Levels = new List<KeyValuePair<string, string>>
+    public static List<KeyValuePair<string, string>> Levels = new List<KeyValuePair<string, string>>
     {
         new KeyValuePair<string, string>("Region","Регион"),
         new KeyValuePair<string, string>("AdministrativeArea","Административный район"),

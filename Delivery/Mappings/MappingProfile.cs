@@ -9,6 +9,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        CreateMap<AddressDto, as_addr_obj>();
         CreateMap<Dish, DishDto>().ReverseMap();
         CreateMap<UserRegisterDto, User>();
         CreateMap<User, UserDto>();

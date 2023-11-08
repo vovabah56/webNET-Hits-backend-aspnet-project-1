@@ -23,4 +23,11 @@ public class AddressController: ControllerBase
     {
         return  await _addressService.GetParents(guid);
     }
+
+    [HttpGet]
+    [Route("search")]
+    public async Task<List<AddressDto>> Search(int parentId, string query)
+    {
+        return await _addressService.Search(parentId, query);
+    }
 }
