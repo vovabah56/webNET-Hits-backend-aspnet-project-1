@@ -92,7 +92,7 @@ public class DishService : IDishService
             throw ex;
         }
 
-        if (await CheckRating(dishId, userId))
+        if (await CheckDishRating(dishId, userId))
         {
             _context.Ratings.Add(new Rating
             {
@@ -113,6 +113,14 @@ public class DishService : IDishService
         }
     }
 
+    public async Task<bool> CheckDishRating(Guid id, Guid userId)
+    {
+        await CheckDishInDb(id);
+
+        var ratingEntity = await _context.Ratings.FirstOrDefaultAsync(x => x.DishId == id && x.UserId == userId);
+        return ratingEntity == null && await IsDishOrdered(id, userId);
+    }
+
     private void CheckCorrectRating(int value)
     {
         if (value is >= 0 and <= 10) return;
@@ -120,15 +128,11 @@ public class DishService : IDishService
         e.Data.Add(StatusCodes.Status400BadRequest.ToString(),
             "Bad Request, Rating range is 0-10"
         );
-        throw e;    }
+        throw e;    
+    }
 
 
-    public async Task<bool> CheckRating(Guid dishId, Guid userId)
-    {
-        await CheckDishInDb(dishId);
-        var getRatingUser =  await _context.Ratings.FirstOrDefaultAsync(x => x.DishId == dishId && x.UserId == userId);
-        return getRatingUser == null && await IsDishOrdered(userId, dishId);
-    }   
+    
 
     private async Task<bool> IsDishOrdered(Guid userId, Guid dishId)
     {
@@ -137,7 +141,7 @@ public class DishService : IDishService
         {
             if (await _context.Orders.FirstOrDefaultAsync(x =>
                     x.UserId == userId 
-                    && x.Id == cart.Id 
+                    && x.Id == cart.OrderId 
                     && x.Status == OrderStatus.Delivered.ToString()) != null)
             {
                 return true;

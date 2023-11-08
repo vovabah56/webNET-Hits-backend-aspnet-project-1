@@ -41,12 +41,20 @@ public class DishController : ControllerBase
         await _dishService.SetRating(id,  Guid.Parse(User.Identity.Name), rating);
     }
     
+    [HttpGet]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    [Route("{id}/rating/check")]
+    public async Task<bool> CheckDishRating(Guid id)
+    {
+        return await _dishService.CheckDishRating(id, Guid.Parse(User.Identity.Name));
+    }
     
-    [HttpPost]
+    /*[HttpPost]
     public async Task AddDishs([FromBody] List<DishDto> dishDtos)
     {
         await _dishService.AddDishs(dishDtos);
-    }
+    }*/
     
     
 }

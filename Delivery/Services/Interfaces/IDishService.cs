@@ -11,5 +11,7 @@ public interface IDishService
 
     Task SetRating(Guid dishId, Guid userId, int value);
 
+    Task<bool> CheckDishRating(Guid id, Guid userId);
+
 
 }

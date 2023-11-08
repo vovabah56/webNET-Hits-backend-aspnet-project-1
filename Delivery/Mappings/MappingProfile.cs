@@ -14,5 +14,6 @@ public class MappingProfile : Profile
         CreateMap<UserRegisterDto, User>();
         CreateMap<User, UserDto>();
         CreateMap<Cart, BasketDto>();
+        CreateMap<Order, OrderInfoDto>();
     }
 }

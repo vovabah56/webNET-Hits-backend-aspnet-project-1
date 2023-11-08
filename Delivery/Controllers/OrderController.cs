@@ -46,9 +46,9 @@ public class OrderController: ControllerBase
     [Authorize]
     [Authorize(Policy = "ValidateToken")]
     [Route("{id}/status")]
-    public async Task ConfirmOrderDelivery(Guid orderId)
+    public async Task ConfirmOrderDelivery(Guid id)
     {
-        await _orderService.ConfirmOrderDel(Guid.Parse(User.Identity.Name), orderId);
+        await _orderService.ConfirmOrderDel(Guid.Parse(User.Identity.Name), id);
     }
     
 }
