@@ -83,7 +83,7 @@ public class DishService : IDishService
     {
         CheckCorrectRating(value);
         await CheckDishInDb(dishId);
-        if (!await IsDishOrdered(dishId, userId))
+        if (!await IsDishOrdered(userId, dishId))
         {
             var ex = new Exception();
             ex.Data.Add(StatusCodes.Status400BadRequest.ToString(),
@@ -118,7 +118,7 @@ public class DishService : IDishService
         await CheckDishInDb(id);
 
         var ratingEntity = await _context.Ratings.FirstOrDefaultAsync(x => x.DishId == id && x.UserId == userId);
-        return ratingEntity == null && await IsDishOrdered(id, userId);
+        return ratingEntity == null && await IsDishOrdered(userId, id);
     }
 
     private void CheckCorrectRating(int value)
