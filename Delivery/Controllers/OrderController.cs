@@ -1,5 +1,4 @@
-﻿using Delivery.DB;
-using Delivery.DTO;
+﻿using Delivery.DTO;
 using Delivery.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,4 +24,31 @@ public class OrderController: ControllerBase
     {
         await _orderService.CreateOrder(Guid.Parse(User.Identity.Name), orderCreateDto);
     }
+    
+    [HttpGet]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    [Route("{id}")]
+    public async Task<OrderDto> GetOrderInfo(Guid id)
+    {
+        return await _orderService.GetInfoOrder(Guid.Parse(User.Identity.Name), id);
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    public async Task<List<OrderInfoDto>> GetOrders()
+    {
+        return await _orderService.GetOrders(Guid.Parse(User.Identity.Name));
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    [Route("{id}/status")]
+    public async Task ConfirmOrderDelivery(Guid orderId)
+    {
+        await _orderService.ConfirmOrderDel(Guid.Parse(User.Identity.Name), orderId);
+    }
+    
 }

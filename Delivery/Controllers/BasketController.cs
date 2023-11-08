@@ -34,4 +34,12 @@ public class BasketController: ControllerBase
         return _basketService.GetBasketUser(Guid.Parse(User.Identity.Name));
     }
     
+    [HttpDelete]
+    [Authorize]
+    [Authorize(Policy = "ValidateToken")]
+    [Route("dish/{dishId}")]
+    public async Task DecreaseDishQuantityInCart(Guid dishId)
+    {
+        await _basketService.RemoveDishFromCart(Guid.Parse(User.Identity.Name), dishId);
+    }
 }

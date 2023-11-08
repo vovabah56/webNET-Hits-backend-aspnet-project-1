@@ -74,4 +74,33 @@ public class BasketService: IBasketService
 
         return dishList;
     }
+
+    public async Task RemoveDishFromCart(Guid userId, Guid dishId)
+    {
+        if (await _context.Dishes.FirstOrDefaultAsync(x => x.Id == dishId) == null)
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status400BadRequest.ToString(),
+                "Dish not exists"
+            );
+            throw ex;
+        }
+        
+        var dishCartEntity =
+            await _context.Carts.Where(x => x.UserId == userId && x.DishId == dishId && x.OrderId == null).FirstOrDefaultAsync();
+
+        if (dishCartEntity == null)
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status404NotFound.ToString(),
+                "Dish not found in cart"
+            );
+            throw ex;
+        }
+
+        dishCartEntity.Count--;
+        if (dishCartEntity.Count == 0)
+            _context.Carts.Remove(dishCartEntity);
+        await _context.SaveChangesAsync();
+    }
 }

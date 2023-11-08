@@ -10,7 +10,7 @@ namespace Delivery.Services;
 
 public class AddressService : IAddressService
 {
-    public ApplicationDbContext _context { get; set; }
+    private ApplicationDbContext _context { get; set; }
     public IMapper _mapper { get; set; }
 
     public AddressService(ApplicationDbContext applicationDbContext, IMapper iMapper)
@@ -26,7 +26,7 @@ public class AddressService : IAddressService
         if (kids != null)
         {
             
-            var AdrList =  _context.AsHouses.Where(x => kids.Contains(x.ObjectId) && x.IsActive == 1).Select(x => new AddressDto
+            var adrList =  _context.AsHouses.Where(x => kids.Contains(x.ObjectId) && x.IsActual == 1).Select(x => new AddressDto
             {
                 objectGuid = x.ObjectGuid,
                 objectId = x.ObjectId,
@@ -35,7 +35,7 @@ public class AddressService : IAddressService
                     Enum.GetName(typeof(GarAddressLevel), (GarAddressLevel)(9)),
                 objectLevelText = Enum.GetName(typeof(GarAddressLevel),
                     (GarAddressLevel)(9))
-            }).Concat(_context.AsAddrObjs.Where(x => kids.Contains(x.ObjectId) && x.IsActive == 1).Select(x => new AddressDto
+            }).Concat(_context.AsAddrObjs.Where(x => kids.Contains(x.ObjectId) && x.IsActual == 1).Select(x => new AddressDto
             {
                 objectGuid = x.ObjectGuid,
                 objectId = x.ObjectId,
@@ -44,7 +44,7 @@ public class AddressService : IAddressService
                 objectLevelText = x.Level
             }));
             
-            var listKids = AdrList.ToList();
+            var listKids = adrList.ToList();
             List<AddressDto> result = new List<AddressDto>();
             foreach (var kid in listKids)
             {
@@ -64,9 +64,6 @@ public class AddressService : IAddressService
         var ex = new Exception();
         ex.Data.Add(StatusCodes.Status404NotFound.ToString(), "Object not found");
         throw ex;
-        
-        return new List<AddressDto>();
-
 
 
     }
@@ -91,14 +88,14 @@ public class AddressService : IAddressService
 
         List<AddressDto> list = new List<AddressDto>();
 
-        var AddInH = await _context.AsAdmHierarchies.FirstOrDefaultAsync(x => x.ObjectId == id);
-        if (AddInH == null)
+        var addInH = await _context.AsAdmHierarchies.FirstOrDefaultAsync(x => x.ObjectId == id);
+        if (addInH == null)
         {
             var ex = new Exception();
-            ex.Data.Add(StatusCodes.Status404NotFound.ToString(), "Object in h not found");
+            ex.Data.Add(StatusCodes.Status404NotFound.ToString(), "Object in path not found");
             throw ex;
         }
-        var path = AddInH.Path;
+        var path = addInH.Path;
         
         var listPath = path?.Split(".") ?? throw new Exception("Path is null");
 
@@ -109,6 +106,14 @@ public class AddressService : IAddressService
             if (objectHouses == null)
             {
                 objectBuild = await _context.AsAddrObjs.FirstOrDefaultAsync(x => x.ObjectId.ToString() == objectId);
+
+                if (objectBuild == null)
+                {
+                    var ex = new Exception();
+                    ex.Data.Add(StatusCodes.Status404NotFound.ToString(), "Object in path not found");
+                    throw ex;
+                }
+                
                 list.Add(new AddressDto
                 {
                     objectGuid = objectBuild.ObjectGuid,
@@ -116,8 +121,7 @@ public class AddressService : IAddressService
                     text = objectBuild.TypeName + " " + objectBuild.Name,
                     objectLevel =
                         Enum.GetName(typeof(GarAddressLevel), (GarAddressLevel)(int.Parse(objectBuild.Level) - 1)),
-                    objectLevelText = Enum.GetName(typeof(GarAddressLevel),
-                        (GarAddressLevel)(int.Parse(objectBuild.Level) - 1))
+                    objectLevelText = GarAddressLevelList.Levels[int.Parse(objectBuild.Level) - 1].Value
                 });
             }
             else

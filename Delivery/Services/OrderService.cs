@@ -1,4 +1,5 @@
-﻿using Delivery.Data.Models;
+﻿using AutoMapper;
+using Delivery.Data.Models;
 using Delivery.DB;
 using Delivery.DB.Enums;
 using Delivery.DB.Models;
@@ -12,11 +13,13 @@ namespace Delivery.Services;
 public class OrderService: IOrderService
 {
     public ApplicationDbContext _context { get; set; }
+    public IMapper _mapper { get; set; }
 
 
-    public OrderService(ApplicationDbContext applicationDbContext)
+    public OrderService(ApplicationDbContext applicationDbContext, IMapper mapper)
     {
         _context = applicationDbContext;
+        _mapper = mapper;
     }
 
 
@@ -49,7 +52,7 @@ public class OrderService: IOrderService
         var newOrder = new Order
         {
             Id = orderId,
-            DeliveryTime = orderCreateDto.DeliveryTime,
+            DeliveryTime = DateTime.UtcNow,
             OrderTime = DateTime.UtcNow,
             Status = OrderStatus.InProcess.ToString(),
             Price = 0,
@@ -59,6 +62,120 @@ public class OrderService: IOrderService
         await _context.Orders.AddAsync(newOrder);
         await _context.SaveChangesAsync();
         newOrder.Price = await CreateOrderOperations(orderId, cartDishes);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<OrderDto> GetInfoOrder(Guid userId, Guid orderId)
+    {
+        var orderInfo = await _context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+        if (orderInfo == null)
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status404NotFound.ToString(),
+                "Order Info not found"
+            );
+            throw ex;
+        }
+
+        if (orderInfo.UserId != userId)
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status403Forbidden.ToString(),
+                "Invalid order owner"
+            );
+            throw ex;
+        }
+        
+        var orderCarts = await _context.Carts.Where(x => x.OrderId == orderId).ToListAsync();
+        if (orderCarts.IsNullOrEmpty())
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status404NotFound.ToString(),
+                "Dishes in Order not found"
+            );
+            throw ex;
+        }
+        
+        var dishes = new List<Dish>();
+        foreach (var orderCart in orderCarts)
+        {
+            var dish = await _context.Dishes.FirstOrDefaultAsync(x => x.Id == orderCart.DishId);
+
+            if (dish != null)
+                dishes.Add(dish);
+            else
+            {
+                var ex = new Exception();
+                ex.Data.Add(StatusCodes.Status404NotFound.ToString(),
+                    "Dish in Order not found"
+                );
+                throw ex;
+            }
+        }
+        
+        var convertedDishes = (from orderCart in orderCarts
+            let dish = dishes.FirstOrDefault(x => x.Id == orderCart.DishId)
+            where dish != null
+            select new BasketDto
+            {
+                Id = dish.Id,
+                Name = dish.Name,
+                Price = dish.Price,
+                TotalPrice = orderCart.Count * dish.Price,
+                Count = orderCart.Count,
+                Photo = dish.Photo
+            }).ToList();
+
+        if (!convertedDishes.IsNullOrEmpty())
+            return new OrderDto
+            {
+                Id = orderInfo.Id,
+                DeliveryTime = orderInfo.DeliveryTime,
+                OrderTime = orderInfo.OrderTime,
+                Status = orderInfo.Status,
+                Price = orderInfo.Price,
+                Dishes = convertedDishes,
+                Address = orderInfo.Address
+            };
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status404NotFound.ToString(),
+                "Empty order list returned"
+            );
+            throw ex;
+        }
+    }
+
+    public async Task<List<OrderInfoDto>> GetOrders(Guid userId)
+    {
+            var orders = await _context.Orders.Where(x => x.UserId == userId).ToListAsync();
+
+            return _mapper.Map<List<OrderInfoDto>>(orders);
+    }
+
+    public async Task ConfirmOrderDel(Guid userId, Guid orderId)
+    {
+        var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+
+        if (order == null)
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status404NotFound.ToString(),
+                "Order Info not found"
+            );
+            throw ex;
+        }
+
+        if (order.UserId != userId)
+        {
+            var ex = new Exception();
+            ex.Data.Add(StatusCodes.Status403Forbidden.ToString(),
+                "Invalid order owner"
+            );
+            throw ex;
+        }
+
+        order.Status = OrderStatus.Delivered.ToString();
         await _context.SaveChangesAsync();
     }
 

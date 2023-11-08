@@ -13,5 +13,6 @@ public class MappingProfile : Profile
         CreateMap<Dish, DishDto>().ReverseMap();
         CreateMap<UserRegisterDto, User>();
         CreateMap<User, UserDto>();
+        CreateMap<Cart, BasketDto>();
     }
 }

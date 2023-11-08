@@ -4,9 +4,7 @@ namespace Delivery.DTO;
 
 public class CreateOrderDto
 {
-    [Required]
-    public DateTime DeliveryTime { get; set; }
+    public DateTime? DeliveryTime { get; set; }
     
-    [Required]
-    public string Address { get; set; }
+    public string? Address { get; set; }
 }
